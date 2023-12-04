@@ -1,0 +1,20 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: "{{ item.state }}"
+  with_items: "{{ required_packages }}"
+
+- name: Disable swap
+  command: swapoff -a
+  become: true
+  when: ansible_swaptotal_mb > 0
+
+- name: Comment swap line from /etc/fstab
+  lineinfile:
+    path: /etc/fstab
+    regexp: '^\s*\S+\s+none\s+swap\s+'
+    line: '#\0'
+    backrefs: yes
+  become: true
+  when: ansible_swaptotal_mb > 0

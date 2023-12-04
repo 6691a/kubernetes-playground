@@ -1,2 +1,11 @@
 ---
-# defaults file for a
+required_ackages:
+  - name: apt-transport-https
+    state: present
+  - name: ca-certificates
+    state: present
+  - name: curl
+    state: present
+
+  
+  

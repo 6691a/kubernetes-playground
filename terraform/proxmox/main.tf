@@ -1,8 +1,8 @@
 
-resource "proxmox_lxc" "primary" {
+resource "proxmox_lxc" "masters" {
   # ==== general ====
   target_node = local.credentials.node
-  hostname = "kubernetes-primary"
+  hostname = "kubernetes-master"
   vmid = 0
   unprivileged = true
   ssh_public_keys =  <<EOF
@@ -21,11 +21,11 @@ resource "proxmox_lxc" "primary" {
 
   # ==== network ====]
   network {
-    name   = "eth0"
-    bridge = "vmbr0"
-    ip     = "192.168.88.50/24"
-    gw     = "192.168.88.1"
-    }
+    name   = local.credentials.network[0].name
+    bridge = local.credentials.network[0].bridge
+    ip     = local.credentials.network[0].ip
+    gw     = local.credentials.network[0].gateway
+  }
 
   # ==== system ====
   onboot = false
@@ -34,11 +34,11 @@ resource "proxmox_lxc" "primary" {
 
 
 
-resource "proxmox_lxc" "nodes" {
+resource "proxmox_lxc" "worker" {
   # ==== general ====
-  count = 2
+  count = length(local.credentials.network) - 1
   target_node = local.credentials.node
-  hostname = "kubernetes-node-${count.index}"
+  hostname = "kubernetes-worker-${count.index}"
   vmid = 0
   unprivileged = true
   ssh_public_keys =  <<EOF
@@ -57,11 +57,11 @@ resource "proxmox_lxc" "nodes" {
 
   # ==== network ====]
   network {
-    name   = "eth0"
-    bridge = "vmbr0"
-    ip     = "192.168.88.5${count.index + 1}/24"
-    gw     = "192.168.88.1"
-    }
+    name   = local.credentials.network[count.index + 1].name
+    bridge = local.credentials.network[count.index + 1].bridge
+    ip     = local.credentials.network[count.index + 1].ip
+    gw     = local.credentials.network[count.index + 1].gateway
+  }
 
   # ==== system ====
   onboot = false
