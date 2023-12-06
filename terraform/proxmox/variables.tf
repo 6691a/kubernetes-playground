@@ -1,9 +1,9 @@
-variable "credentials" {
+variable "setting" {
   type = string
   sensitive = true
   default = "../../secret/proxmox_credential.json"
 }
 
 locals {
-  credentials = jsondecode(file(var.credentials))
+  setting = jsondecode(file(var.setting))
 }
