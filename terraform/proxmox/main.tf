@@ -9,11 +9,11 @@ resource "proxmox_vm_qemu" "masters" {
 
   onboot = true
 
-  # disk {
-  #   type = "scsi"
-  #   storage = "storage01"
-  #   size    = "5G"
-  # }        
+  disk {
+    type = "virtio"
+    storage = "storage01"
+    size    = "30G"
+  }     
 
   cores = 2
   memory = 2048
@@ -26,7 +26,7 @@ resource "proxmox_vm_qemu" "masters" {
   }
 
   ipconfig0 = "ip=${local.setting.network[0].ip},gw=${local.setting.network[0].gateway}"
-  ciuser = "root"
+  ciuser = local.setting.user
   sshkeys =  <<EOF
     ${ local.setting.ssh_public }
   EOF
@@ -46,29 +46,27 @@ resource "proxmox_vm_qemu" "worker" {
   clone = local.setting.clone
   full_clone = false
 
-
-  # ==== disk  ====
-  # disk {
-  #   type = "scsi"
-  #   storage = "storage01"
-  #   size    = "5G"
-  # }      
+  disk {
+    type = "virtio"
+    storage = "storage01"
+    size    = "10G"
+  }        
 
   cores = 1
   memory = 1024
 
-  # ==== network ====]
-  network {  
-    model = "virtio"
-    bridge = local.setting.network[count.index + 1].bridge
-    firewall = false
-    link_down = false
-  }
+  # ==== network ====
+  # network {  
+  #   model = "virtio"
+  #   bridge = local.setting.network[count.index + 1].bridge
+  #   firewall = false
+  #   link_down = false
+  # }
 
   onboot = true
 
   ipconfig0 = "ip=${local.setting.network[count.index + 1].ip},gw=${local.setting.network[count.index + 1].gateway}"
-  ciuser = "root"
+  ciuser = local.setting.user
   sshkeys =  <<EOF
     ${ local.setting.ssh_public }
   EOF
