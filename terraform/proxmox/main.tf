@@ -9,11 +9,11 @@ resource "proxmox_vm_qemu" "masters" {
 
   onboot = true
 
-  disk {
-    type = "virtio"
-    storage = "storage01"
-    size    = "30G"
-  }     
+#   disk {
+#     type = "virtio"
+#     storage = "storage01"
+#     size    = "30G"
+#   }     
 
   cores = 2
   memory = 2048
@@ -46,22 +46,21 @@ resource "proxmox_vm_qemu" "worker" {
   clone = local.setting.clone
   full_clone = false
 
-  disk {
-    type = "virtio"
-    storage = "storage01"
-    size    = "10G"
-  }        
+#   disk {
+#     type = "virtio"
+#     storage = "storage01"
+#     size    = "10G"
+#   }        
 
-  cores = 1
-  memory = 1024
+  cores = 2
+  memory = 2048
 
-  # ==== network ====
-  # network {  
-  #   model = "virtio"
-  #   bridge = local.setting.network[count.index + 1].bridge
-  #   firewall = false
-  #   link_down = false
-  # }
+  network {  
+    model = "virtio"
+    bridge = local.setting.network[count.index + 1].bridge
+    firewall = false
+    link_down = false
+  }
 
   onboot = true
 
