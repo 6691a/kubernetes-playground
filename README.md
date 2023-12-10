@@ -18,11 +18,16 @@ VM 혹은 클라우드에 쿠버네티스 환경을 구축하고 배우는 공�
 <summary>GCP</summary>
 
 > ❗️ 요금이 부과되므로 주의하세요.
-- secret 폴더에 인증 정보를 gcp_credential.json 파일로 만들어 넣어주세요.
+
+1. gcp_credential.json 파일 작성하기.
+```
+# /kubernetes
+cp -r secret/sample/* secret/
+```
 
 명령어를 실행하여 GKE를 생성하세요.
-```sh
-# terraform/gcp
+```
+# kubernetes/terraform/gcp
 terraform init && terraform apply -auto-approve
 ```
 </details>
@@ -32,8 +37,25 @@ terraform init && terraform apply -auto-approve
 <details>
 <summary>Proxmox</summary>
 
-- ```secret/sample``` 폴더에 필요한 파일을 복사하여 ```secret/``` 폴더 아래 이동 후 입력해주세요. 
+> ❗️ Linux Container에서는 KubeSpary를 사용하여 K8S 설치가 불가능 합니다.
 
+### Setup VM
+1. proxmox_credential.json 파일 작성하기.
+```
+# /kubernetes
+cp -r secret/sample/* secret/
+```
+
+2. Clone에 필요한 이미지 만들기
+- https://devopstales.github.io/home/proxmox-terraform/ 
+```
+# /kubernetes/terraform/proxmox
+terraform init && terraform apply -auto-approve
+```
+---
+### Setup K8S
+- [KubeSpary]를 통해 Kubernetes 구축하기
+- [k8s-hard-way] 직접 구축하기
 
 </details>
 
@@ -43,3 +65,8 @@ terraform init && terraform apply -auto-approve
 [ab-badge]: https://img.shields.io/badge/ansible-000000?style=for-the-badge&logo=ansible&logoColor=white
 [pm-badge]: https://img.shields.io/badge/proxmox-E57000?style=for-the-badge&logo=proxmox&logoColor=white
 [gcp-badge]: https://img.shields.io/badge/googlecloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white
+
+
+[KubeSpary]: ansible/kubespray/README.md
+
+[k8s-hard-way]: https://github.com/kelseyhightower/kubernetes-the-hard-way
